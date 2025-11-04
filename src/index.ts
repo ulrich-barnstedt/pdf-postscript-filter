@@ -1,21 +1,29 @@
-import * as fs from "node:fs/promises";
 import {PDFDocument, PDFName, PDFRawStream} from "pdf-lib";
-import * as zlib from "node:zlib";
+import getStream, {getStreamAsArrayBuffer} from "get-stream";
+import toReadableStream from "to-readable-stream";
 
 const PDFName_Filter = PDFName.of("Filter");
+const zLibInflate = new DecompressionStream("deflate");
+const zLibDeflate = new CompressionStream("deflate");
+const textEncoder = new TextEncoder();
 
 (async () => {
-    const input = await fs.readFile("../test.pdf");
-    const pdf = await PDFDocument.load(input);
+    // const input = await fs.readFile("../test.pdf");
 
-    pdf.context.enumerateIndirectObjects().forEach(([ref, pdfObj]) => {
-        if (!(pdfObj instanceof PDFRawStream)) return;
+    // TODO: input
+    const pdf = await PDFDocument.load("");
+
+    for (const [_, pdfObj] of pdf.context.enumerateIndirectObjects()) {
+        if (!(pdfObj instanceof PDFRawStream)) continue;
 
         const compression = pdfObj.dict.get(PDFName_Filter);
-        if (compression !== PDFName.FlateDecode) return;
+        if (compression !== PDFName.FlateDecode) continue;
 
-        const inflated = zlib.inflateSync(pdfObj.contents);
-        let inflatedLines = inflated.toString().split("\n");
+        const inflated = await getStream(
+            toReadableStream(new Uint8Array(pdfObj.contents))
+                .pipeThrough(zLibInflate)
+        );
+        let inflatedLines = inflated.split("\n");
 
         let modified = false;
         inflatedLines = inflatedLines.map(l => {
@@ -26,10 +34,13 @@ const PDFName_Filter = PDFName.of("Filter");
         });
 
         if (modified) {
-            const recompressed = zlib.deflateSync(inflatedLines.join("\n"));
-            recompressed.copy(pdfObj.contents)
+            const recompressed = await getStreamAsArrayBuffer(
+                toReadableStream(textEncoder.encode(inflatedLines.join("\n")))
+                    .pipeThrough(zLibDeflate)
+            );
+            pdfObj.contents.set(new Uint8Array(recompressed));
         }
-    })
+    }
 
-    await fs.writeFile("../out.pdf", await pdf.save());
+    // await fs.writeFile("../out.pdf", await pdf.save());
 })();

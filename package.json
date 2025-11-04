@@ -4,13 +4,15 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "node build.js"
   },
   "dependencies": {
-    "pdf-lib": "^1.17.1"
+    "get-stream": "^9.0.1",
+    "pdf-lib": "^1.17.1",
+    "to-readable-stream": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node": "^24.10.0",
+    "esbuild": "^0.25.12",
     "typescript": "^5.5.3"
   },
   "private": true
