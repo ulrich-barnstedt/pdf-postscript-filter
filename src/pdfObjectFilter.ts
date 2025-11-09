@@ -3,8 +3,6 @@ import getStream, {getStreamAsArrayBuffer} from "get-stream";
 import toReadableStream from "to-readable-stream";
 
 const PDFName_Filter = PDFName.of("Filter");
-const zLibInflate = new DecompressionStream("deflate");
-const zLibDeflate = new CompressionStream("deflate");
 const textEncoder = new TextEncoder();
 
 export const filterPdfObjects = async (input: ArrayBuffer): Promise<Uint8Array> => {
@@ -18,7 +16,7 @@ export const filterPdfObjects = async (input: ArrayBuffer): Promise<Uint8Array> 
 
         const inflated = await getStream(
             toReadableStream(new Uint8Array(pdfObj.contents))
-                .pipeThrough(zLibInflate)
+                .pipeThrough(new DecompressionStream("deflate"))
         );
         let inflatedLines = inflated.split("\n");
 
@@ -33,7 +31,7 @@ export const filterPdfObjects = async (input: ArrayBuffer): Promise<Uint8Array> 
         if (modified) {
             const recompressed = await getStreamAsArrayBuffer(
                 toReadableStream(textEncoder.encode(inflatedLines.join("\n")))
-                    .pipeThrough(zLibDeflate)
+                    .pipeThrough(new CompressionStream("deflate"))
             );
             pdfObj.contents.set(new Uint8Array(recompressed));
         }

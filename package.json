@@ -1,19 +1,20 @@
 {
-  "name": "pdf-object-filter",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "scripts": {
-    "build": "node build.js"
-  },
-  "dependencies": {
-    "get-stream": "^9.0.1",
-    "pdf-lib": "^1.17.1",
-    "to-readable-stream": "^4.0.0"
-  },
-  "devDependencies": {
-    "esbuild": "^0.25.12",
-    "typescript": "^5.5.3"
-  },
-  "private": true
+    "name": "pdf-object-filter",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "node build.js"
+    },
+    "dependencies": {
+        "get-stream": "^9.0.1",
+        "pdf-lib": "^1.17.1",
+        "to-readable-stream": "^4.0.0"
+    },
+    "devDependencies": {
+        "esbuild": "^0.25.12",
+        "typescript": "^5.5.3"
+    },
+    "private": true,
+    "type": "module"
 }
