@@ -5,8 +5,8 @@ body {
 }
 
 :root {
-     color-scheme: dark;
- }
+    color-scheme: dark;
+}
 
 * {
     color: white;
@@ -46,47 +46,4 @@ textarea {
     width: 100%;
     box-sizing: border-box;
     max-width: 700px;
-}
-
-
-/* ------- Classes ------- */
-
-.title {
-    font-weight: 800;
-    margin: 10px 0;
-}
-
-.subtitle {
-    font-weight: 600;
-}
-
-.container {
-    margin: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.subcontainer {
-    padding: 10px 10px 10px 20px;
-    border-left: 1px solid #aaaaaa;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.padded-div {
-    margin: 10px 0;
-}
-
-.italic {
-    font-style: italic;
-}
-
-.margin-left {
-    margin-left: 4px;
-}
-
-.invisible {
-    display: none;
 }

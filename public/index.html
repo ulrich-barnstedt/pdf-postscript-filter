@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PDF Filter</title>
-    <script src="dist/bundle.js" type="module" defer></script>
+    <title>PDF/PostScript Filter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="dist/bundle.js" type="module" defer></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="page.css">
+    <link rel="stylesheet" href="classes.css">
 </head>
 <body>
     <div class="container">
-        <div class="title">
-            <span>
+        <div class="padded-div">
+            <span class="title">
                 PDF Object / PostScript filter
             </span>
         </div>
@@ -86,6 +88,10 @@
                     Note: lines should be the same length after processing, else your PDF may break.
                 </span>
             </div>
+        </div>
+
+        <div class="padded-div secondary-text">
+            @_ ulrich-barnstedt
         </div>
     </div>
 </body>
