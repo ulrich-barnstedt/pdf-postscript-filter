@@ -5,8 +5,20 @@ import toReadableStream from "to-readable-stream";
 const PDFName_Filter = PDFName.of("Filter");
 const textEncoder = new TextEncoder();
 
-export const filterPdfObjects = async (input: ArrayBuffer): Promise<Uint8Array> => {
+export interface PdfFilterResult {
+    linesChanged: number;
+    objectsRewritten: number;
+    newPdf: Uint8Array
+}
+
+export const filterPdfObjects = async (
+    input: ArrayBuffer,
+    selectorFunction: (line: string) => boolean,
+    mappingFunction: (line: string) => string
+): Promise<PdfFilterResult> => {
     const pdf = await PDFDocument.load(input);
+    let linesChanged = 0;
+    let objectsRewritten = 0;
 
     for (const [_, pdfObj] of pdf.context.enumerateIndirectObjects()) {
         if (!(pdfObj instanceof PDFRawStream)) continue;
@@ -22,13 +34,16 @@ export const filterPdfObjects = async (input: ArrayBuffer): Promise<Uint8Array> 
 
         let modified = false;
         inflatedLines = inflatedLines.map(l => {
-            if (!l.includes("Td [(\\251)]")) return l;
+            if (!selectorFunction(l)) return l;
 
+            linesChanged++;
             modified = true;
-            return l.replace(/\([\w\\&,]+\)/g, m => `(${" ".repeat(m.length)})`);
+            return mappingFunction(l);
         });
 
         if (modified) {
+            objectsRewritten++;
+
             const recompressed = await getStreamAsArrayBuffer(
                 toReadableStream(textEncoder.encode(inflatedLines.join("\n")))
                     .pipeThrough(new CompressionStream("deflate"))
@@ -37,5 +52,9 @@ export const filterPdfObjects = async (input: ArrayBuffer): Promise<Uint8Array> 
         }
     }
 
-    return await pdf.save();
+    return {
+        newPdf: await pdf.save(),
+        linesChanged,
+        objectsRewritten
+    };
 }
