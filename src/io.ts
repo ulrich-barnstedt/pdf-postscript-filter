@@ -18,19 +18,19 @@ fileReader.addEventListener("load", (event: ProgressEvent<FileReader>) => {
     }
 });
 
-export const downloadUint8ArrayAsPdf = (array: Uint8Array, filename: string) => {
+export const downloadUint8ArrayAsPdf = (array: Uint8Array, filename: string, linkParent: HTMLElement) => {
     // @ts-expect-error typescript not understanding Uint8Array to blob conversion
     const blob = new Blob([array], {
         type: "application/pdf"
     });
 
     const blobUrl = URL.createObjectURL(blob);
-    const fakeLink = document.createElement("a");
-    fakeLink.href = blobUrl;
-    fakeLink.download = filename;
-    fakeLink.style.display = "none";
+    const linkElement = document.createElement("a");
+    linkElement.href = blobUrl;
+    linkElement.download = filename;
+    linkElement.innerText = ">> " + filename;
 
-    document.body.appendChild(fakeLink);
-    fakeLink.click();
-    fakeLink.remove();
+    linkParent.childNodes.forEach(c => c.remove());
+    linkParent.appendChild(linkElement);
+    linkElement.click();
 }

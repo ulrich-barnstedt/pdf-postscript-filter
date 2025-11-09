@@ -2,37 +2,67 @@ body {
     background: #1a1a1f;
 }
 
+:root {
+     color-scheme: dark;
+ }
+
 * {
     color: white;
     font-size: medium;
-    font-family: sans-serif;
+    font-family: "JetBrains Mono", monospace;
 }
 
 input[type="file"] {
     display: none;
 }
 
-button, .custom-file-upload {
+button, .custom-file-upload, select, textarea {
     border: 1px solid white;
     margin: 1px;
-    padding: 5px 10px;
-    border-radius: 3px;
+    padding: 2px 4px;
     background: #1a1a1f;
 }
 
-button:hover, .custom-file-upload:hover {
+button:hover, .custom-file-upload:hover, select:hover, textarea:hover {
     background: #3a3a3f;
     border: 2px solid white;
     margin: 0;
     cursor: pointer;
 }
 
-.fat-text {
+select {
+    padding: 2px 12px 2px 4px;
+}
+
+textarea:active {
+    border-radius: 0;
+}
+
+textarea {
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow: auto;
+}
+
+.title {
     font-weight: 800;
+    margin: 10px 0;
+}
+
+.subtitle {
+    font-weight: 600;
 }
 
 .container {
     margin: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.subcontainer {
+    padding: 10px 10px 10px 20px;
+    border-left: 1px solid #aaaaaa;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -48,4 +78,8 @@ button:hover, .custom-file-upload:hover {
 
 .margin-left {
     margin-left: 4px;
+}
+
+.invisible {
+    display: none;
 }
