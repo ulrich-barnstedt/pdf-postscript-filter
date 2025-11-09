@@ -1,4 +1,4 @@
-# PDF Object / PostScript filter
+# PDF PostScript filter
 
 Webservice for editing PostScript in PDFs on the fly, implemented purely in TypeScript.
 
