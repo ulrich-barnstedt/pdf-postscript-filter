@@ -1,46 +1,34 @@
-import {PDFDocument, PDFName, PDFRawStream} from "pdf-lib";
-import getStream, {getStreamAsArrayBuffer} from "get-stream";
-import toReadableStream from "to-readable-stream";
+import {downloadUint8ArrayAsPdf, fileToArrayBuffer} from "./io";
+import {filterPdfObjects} from "./pdfObjectFilter";
 
-const PDFName_Filter = PDFName.of("Filter");
-const zLibInflate = new DecompressionStream("deflate");
-const zLibDeflate = new CompressionStream("deflate");
-const textEncoder = new TextEncoder();
+const getElementByIdTyped = <T> (id: string): T => document.getElementById(id) as T;
+const dom = {
+    filterButton: getElementByIdTyped<HTMLButtonElement>("filter-button"),
+    fileInput: getElementByIdTyped<HTMLInputElement>("file-input"),
+    selectedFile: getElementByIdTyped<HTMLSpanElement>("selected-file")
+}
 
-(async () => {
-    // const input = await fs.readFile("../test.pdf");
-
-    // TODO: input
-    const pdf = await PDFDocument.load("");
-
-    for (const [_, pdfObj] of pdf.context.enumerateIndirectObjects()) {
-        if (!(pdfObj instanceof PDFRawStream)) continue;
-
-        const compression = pdfObj.dict.get(PDFName_Filter);
-        if (compression !== PDFName.FlateDecode) continue;
-
-        const inflated = await getStream(
-            toReadableStream(new Uint8Array(pdfObj.contents))
-                .pipeThrough(zLibInflate)
-        );
-        let inflatedLines = inflated.split("\n");
-
-        let modified = false;
-        inflatedLines = inflatedLines.map(l => {
-            if (!l.includes("Td [(\\251)]")) return l;
-
-            modified = true;
-            return l.replace(/\([\w\\&,]+\)/g, m => `(${" ".repeat(m.length)})`);
-        });
-
-        if (modified) {
-            const recompressed = await getStreamAsArrayBuffer(
-                toReadableStream(textEncoder.encode(inflatedLines.join("\n")))
-                    .pipeThrough(zLibDeflate)
-            );
-            pdfObj.contents.set(new Uint8Array(recompressed));
-        }
+dom.filterButton.addEventListener("click", async () => {
+    if (!dom.fileInput.files?.[0]) {
+        return;
     }
+    const file = dom.fileInput.files[0];
 
-    // await fs.writeFile("../out.pdf", await pdf.save());
-})();
+    const nameParts = file.name.split(".")
+    if (nameParts.length > 1) {
+        nameParts.splice(nameParts.length - 1, 0, "filtered");
+    }
+    const newName = nameParts.join(".");
+
+    const fileBuffer = await fileToArrayBuffer(file);
+    const processedPdf = await filterPdfObjects(fileBuffer);
+    downloadUint8ArrayAsPdf(processedPdf, newName);
+});
+
+dom.fileInput.addEventListener("change", () => {
+    if (dom.fileInput.files?.[0]) {
+        dom.selectedFile.innerText = dom.fileInput.files[0].name;
+    } else {
+        dom.selectedFile.innerText = "";
+    }
+});

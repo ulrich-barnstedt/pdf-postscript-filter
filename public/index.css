@@ -1,0 +1,51 @@
+body {
+    background: #1a1a1f;
+}
+
+* {
+    color: white;
+    font-size: medium;
+    font-family: sans-serif;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+button, .custom-file-upload {
+    border: 1px solid white;
+    margin: 1px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: #1a1a1f;
+}
+
+button:hover, .custom-file-upload:hover {
+    background: #3a3a3f;
+    border: 2px solid white;
+    margin: 0;
+    cursor: pointer;
+}
+
+.fat-text {
+    font-weight: 800;
+}
+
+.container {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.padded-div {
+    margin: 10px 0;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.margin-left {
+    margin-left: 4px;
+}
