@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>PDF Filter</title>
     <script src="dist/bundle.js" type="module" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,7 +43,7 @@
 
         <div class="subcontainer invisible" id="results-container">
             <span class="subtitle">
-                Results
+                Result
             </span>
             <div id="result-link-holder">
 
@@ -74,19 +75,18 @@
             <div>
                 Selection function
                 <br/>
-                <textarea rows="6" cols="40" wrap="soft" id="selection-function"></textarea>
+                <textarea rows="6" wrap="soft" id="selection-function"></textarea>
             </div>
             <div>
                 Mapping function
                 <br/>
-                <textarea rows="8" cols="40" wrap="soft" id="mapping-function"></textarea>
+                <textarea rows="8" wrap="soft" id="mapping-function"></textarea>
                 <br/>
                 <span class="italic">
                     Note: lines should be the same length after processing, else your PDF may break.
                 </span>
             </div>
         </div>
-
     </div>
 </body>
 </html>
